@@ -1,0 +1,1 @@
+INSERT INTO arme (id ,name , description) VALUES (1 ,'ak-47' , 'fusil automatique');
