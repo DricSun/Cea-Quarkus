@@ -21,6 +21,7 @@ public class ArmeControlleur {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/armes")
     public Response getAllArmes() {
         List<Arme> armes = armeService.getArmes();
         return Response.ok().entity(armes).build();
@@ -40,21 +41,34 @@ public class ArmeControlleur {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
     public Response createArme(Arme arme) {
-        Arme createdArme = armeService.createArme(arme);
-        return Response.ok().entity(createdArme).build();
+        try{
+            Arme createdArme = armeService.createArme(arme);
+            return Response.ok().entity(createdArme).header("Content-Type" ,  "application/json; charset=utf-8").build();
+        }catch (Exception e){
+            System.out.println("une erreur s 'est produite" + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @DELETE
-    public Response deleteArme(Arme arme){
-        armeService.deleteArme(arme);
+    @Transactional
+    @Path("/{armeId}")
+    public Response deleteArme(@PathParam("armeId") Long armeId){
+        Arme deletedArme = armeService.getArmeById(armeId); // Récupérer l'arme à supprimer
+        if (deletedArme == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Arme non trouvée").build();
+        }
+
+        armeService.deleteArme(armeId); // Supprimer l'arme
+
         return Response.ok().entity("Arme supprimée avec succès").build();
     }
 
     @PUT
     @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response updateArme(@PathParam("id") Long id, Arme arme) {
         Arme updatedArme = armeService.updateArme(id, arme);
 

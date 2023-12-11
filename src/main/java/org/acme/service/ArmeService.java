@@ -20,8 +20,14 @@ public class ArmeService{
     }
 
     public Arme createArme(Arme arme) {
-        armeRepository.persist(arme);
-        return arme;
+        Arme createdArme = new Arme();
+        System.out.println("test ******");
+        createdArme.setName(arme.getName());
+        createdArme.setDescription(arme.getDescription());
+
+        armeRepository.persist(createdArme);
+
+        return createdArme;
     }
 
     public List<Arme> getArmes(){
@@ -29,9 +35,9 @@ public class ArmeService{
         return armeRepository.listAll();
     }
 
-    public void deleteArme(Arme arme){
+    public void deleteArme(@PathParam("id")Long id){
 
-        armeRepository.delete(arme);
+        armeRepository.deleteById(id);
     }
 
     public Arme updateArme(Long id, Arme updateArme) {
